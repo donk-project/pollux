@@ -1,0 +1,13 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+
+package(default_visibility = ["//:pollux_pkg"])
+
+filegroup(
+    name = "complete",
+    srcs = glob([
+        "*.ttf",
+        "*.png",
+    ]),
+)

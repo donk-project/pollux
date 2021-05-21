@@ -1,0 +1,47 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@donk//:defs.bzl", "WINDOWS_DEFAULT_COPTS", "DARWIN_DEFAULT_COPTS")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "networking",
+    hdrs = [
+        "constants.h",
+    ],
+)
+
+cc_library(
+    name = "serialization",
+    srcs = [
+        "proto_deserialization.cc",
+        "proto_serialization.cc",
+    ],
+    hdrs = [
+        "proto_deserialization.h",
+        "proto_serialization.h",
+    ],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+    deps = [
+        ":net_cc_proto",
+        "@donk//core",
+        "@donk//interpreter",
+        "@spdlog",
+    ],
+)
+
+proto_library(
+    name = "net_proto",
+    srcs = ["net.proto"],
+)
+
+cc_proto_library(
+    name = "net_cc_proto",
+    deps = [":net_proto"],
+)

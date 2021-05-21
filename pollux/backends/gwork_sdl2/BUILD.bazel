@@ -1,0 +1,25 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@donk//:defs.bzl", "WINDOWS_DEFAULT_COPTS", "DARWIN_DEFAULT_COPTS")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "gwork_sdl2",
+    srcs = ["backend.cc"],
+    hdrs = ["backend.h"],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+    deps = [
+        "//pollux/backends:gwork",
+        "//pollux/core/manager",
+        "//pollux/render",
+        "//pollux/render/manager",
+        "//pollux/ui/manager",
+        "@Gwork",
+        "@donk//interpreter",
+        "@sdl2pp",
+        "@spdlog",
+    ],
+)

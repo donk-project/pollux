@@ -1,0 +1,36 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@donk//:defs.bzl", "WINDOWS_DEFAULT_COPTS", "DARWIN_DEFAULT_COPTS")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "client_room",
+    srcs = ["client_room.cc"],
+    hdrs = ["client_room.h"],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+    data = [
+        "//pollux/assets:complete",
+        "@dtpo//:data",
+    ],
+    deps = [
+        "//pollux/core/manager",
+        "//pollux/networking",
+        "//pollux/networking:net_cc_proto",
+        "//pollux/networking:serialization",
+        "//pollux/networking/client",
+        "//pollux/render",
+        "//pollux/resources/manager",
+        "//pollux/state",
+        "//pollux/ui/states/client",
+        "//pollux/ui/states/client/gwork",
+        "@donk//interpreter",
+        "@spdlog",
+        "@dtpo",
+    ],
+)

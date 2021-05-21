@@ -1,0 +1,28 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@donk//:defs.bzl", "DARWIN_DEFAULT_COPTS", "WINDOWS_DEFAULT_COPTS")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "gwork",
+    srcs = [
+        "gwork_client_login_ui.cc",
+        "gwork_primary_client_ui.cc",
+    ],
+    hdrs = [
+        "gwork_client_login_ui.h",
+        "gwork_primary_client_ui.h",
+    ],
+    deps = [
+        "//pollux/backends:gwork",
+        "//pollux/ui/states/client",
+        "@Gwork",
+    ],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+)

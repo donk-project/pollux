@@ -1,0 +1,86 @@
+load("@rules_cc//cc:defs.bzl", "objc_library")
+load("@donk//:defs.bzl", "DARWIN_DEFAULT_COPTS")
+load(
+    "@build_bazel_rules_apple//apple:macos.bzl",
+    "macos_application",
+)
+load(
+    "@build_bazel_rules_apple//apple:versioning.bzl",
+    "apple_bundle_version",
+)
+load(
+    "@wso_third_party_buildfiles//:cef.bzl",
+    "MAC_COPTS",
+    "MAC_DEFINES",
+    "HELPER_NAMES",
+)
+
+objc_library(
+    name = "client_mac",
+    copts = MAC_COPTS + DARWIN_DEFAULT_COPTS,
+    defines = MAC_DEFINES,
+    non_arc_srcs = [
+        "main.mm",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pollux/backends/gwork_sdl2",
+        "//pollux/browser/manager:sdlcef_browser_manager",
+        "//pollux/client/states:client_room",
+        "//pollux/common:event",
+        "//pollux/core/manager",
+        "//pollux/core/manager:default",
+        "//pollux/resources/manager",
+        "//pollux/resources/manager:mac",
+        "@cef-project//:examples_minimal_mac",
+        "@cef_prebuilt_macos_x64//:cef_headers",
+        "@cef_prebuilt_macos_x64//:libcef_dll_wrapper_mac",
+        "@cef_prebuilt_macos_x64//:libcef_sandbox_mac",
+        "@sdl2",
+        "@sdl2-cef//:sdl-cef_mac",
+        "@sdl2_image",
+        "@spdlog",
+    ],
+)
+
+apple_bundle_version(
+    name = "PolluxClientVersion",
+    build_version = "0.1.0",
+)
+
+[
+    macos_application(
+        name = "PolluxClientMacOSHelper_" + name,
+        bundle_id = "garden.snowfrost.pollux.client.helper" + plist_suffix,
+        bundle_name = "Donk Client Helper" + bundle_name_suffix,
+        infoplists = [":Info.plist"],
+        minimum_os_version = "10.15",
+        version = ":PolluxClientVersion",
+        visibility = ["//visibility:public"],
+        deps = [
+            "@cef-project//:examples_minimal_helper",
+        ],
+    )
+    for name, plist_suffix, bundle_name_suffix in HELPER_NAMES
+]
+
+
+macos_application(
+    name = "PolluxClient",
+    additional_contents = dict({
+        ":PolluxClientMacOSHelper_" + name: "Frameworks"
+        for name, _, _ in HELPER_NAMES
+    }.items() + {
+        "//pollux/assets:complete": "Resources",
+        "@snowfrost//snowfrost/FalacyTut:data": "Resources/snowfrost/snowfrost/FalacyTut",
+    }.items()),
+    bundle_id = "garden.snowfrost.pollux.client",
+    bundle_name = "Donk Client",
+    infoplists = [":Info.plist"],
+    minimum_os_version = "10.15",
+    version = ":PolluxClientVersion",
+    deps = [
+        ":client_mac",
+        "@cef_prebuilt_macos_x64//:ChromiumEmbeddedFramework_AppleDynamicFramework",
+    ],
+)

@@ -1,0 +1,76 @@
+// Donk Project
+// Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+// SPDX-License-Identifier: MIT
+syntax = "proto2";
+
+package pollux.networking.proto;
+
+option go_package = "snowfrost.garden/pollux/networking/netpb";
+
+message Path { optional string fq = 1; }
+
+message Prefab {
+  optional Path path = 1;
+}
+
+message Iota {
+  optional Path path = 1;
+  optional uint32 entity_id = 2;
+  optional AssocList vars = 3;
+}
+
+message AssocList {
+  map<string, Var> vars = 1;
+}
+
+message Resource {
+  optional string name = 1;
+}
+
+message Preset {
+  optional Path path = 1;
+  optional uint32 entity_id = 2;
+  optional AssocList vars = 3;
+}
+
+message Var {
+  oneof data {
+    int32 i = 1;
+    float f = 2;
+    string s = 3;
+    uint32 entity_id = 4;
+    Resource resource = 5;
+    Preset preset = 6;
+    Prefab prefab = 7;
+  }
+}
+
+message EntityCreate { optional Iota entity = 1; }
+
+message EntityUpdate {
+  optional uint32 entity_id = 1;
+  repeated Var var_updates = 2;
+}
+
+message EntityDestroy { optional uint32 entity_id = 1; }
+
+message LoginRequest {
+  optional string username = 1;
+  optional string password = 2;
+}
+
+message ClientInput {
+  optional string command = 1;
+}
+
+message Broadcast {
+  optional string data = 1;
+}
+
+message PLXMessage {
+  repeated EntityCreate entity_creates = 1;
+  repeated EntityUpdate entity_updates = 2;
+  repeated EntityDestroy entity_destroys = 3;
+  repeated Broadcast broadcasts = 4;
+  repeated ClientInput client_inputs = 5;
+}

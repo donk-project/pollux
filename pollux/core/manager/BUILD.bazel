@@ -1,0 +1,46 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@donk//:defs.bzl", "WINDOWS_DEFAULT_COPTS", "DARWIN_DEFAULT_COPTS")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "default",
+    srcs = [
+        "default_core_manager.cc",
+        "default_core_manager.h",
+    ],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+    deps = select({
+        "//:darwin": [],
+        "//:windows": [],
+    }) + [
+        ":manager",
+        "//pollux/backends/gwork_sdl2",
+        "//pollux/render/manager",
+        "//pollux/browser/manager",
+        "//pollux/resources/manager",
+        "//pollux/resources/manager:default",
+        "//pollux/state",
+        "//pollux/ui/manager",
+        "@spdlog",
+    ],
+)
+
+cc_library(
+    name = "manager",
+    hdrs = ["core_manager.h"],
+    deps = [
+        "//pollux/render/manager",
+        "//pollux/resources/manager",
+        "//pollux/browser/manager",
+        "//pollux/state",
+        "//pollux/ui/manager",
+        "@spdlog",
+    ],
+)

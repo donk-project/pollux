@@ -1,0 +1,14 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "elements",
+    srcs = ["viewport_2d.h"],
+    deps = [
+        "//pollux/resources/manager",
+    ],
+)

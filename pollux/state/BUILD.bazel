@@ -1,0 +1,32 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@donk//:defs.bzl", "DARWIN_DEFAULT_COPTS", "WINDOWS_DEFAULT_COPTS")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "constants",
+    hdrs = ["constants.h"],
+)
+
+cc_library(
+    name = "state",
+    srcs = [
+        "manager.cc",
+        "state.cc",
+    ],
+    hdrs = [
+        "manager.h",
+        "state.h",
+    ],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+    deps = [
+        ":constants",
+        "@spdlog",
+    ],
+)

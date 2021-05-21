@@ -1,0 +1,28 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+workspace(name = "pollux")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "wso_third_party_buildfiles",
+    sha256 = "7a24d1b9a7f1be0c3f5f13603785c7f807c94436696ed8c1d38c7fe89684dd1f",
+    strip_prefix = "third_party_buildfiles-d879dce934d8104f8a694d58aa006d3198dac6c4",
+    urls = ["https://github.com/warriorstar-orion/third_party_buildfiles/archive/d879dce934d8104f8a694d58aa006d3198dac6c4.tar.gz"],
+)
+
+load("@wso_third_party_buildfiles//:deps.bzl", "wso_deps")
+
+wso_deps()
+
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "bf0e5070b4b99240183b29df78155eee335885e53a8af8683964579c214ad301",
+    strip_prefix = "protobuf-3.14.0",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.14.0.zip"],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()

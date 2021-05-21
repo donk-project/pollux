@@ -1,0 +1,40 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//:pollux_pkg"])
+
+cc_library(
+    name = "manager",
+    hdrs = [
+        "browser_manager.h",
+    ],
+    deps = [
+        "//pollux/common:event",
+        "//pollux/geom",
+    ],
+)
+
+cc_library(
+    name = "sdlcef_browser_manager",
+    srcs = ["sdlcef_browser_manager.cc"],
+    hdrs = ["sdlcef_browser_manager.h"],
+    deps = [
+        ":manager",
+        "//pollux/common:event",
+        "//pollux/geom",
+        "@cef-project//:examples_shared_helper",
+        "@sdl2",
+        "@sdl2_image",
+        "@spdlog",
+    ] + select({
+        "//:darwin": [
+            "@cef_prebuilt_macos_x64//:cef_headers",
+            "@cef_prebuilt_macos_x64//:libcef_dll_wrapper_mac",
+            "@cef_prebuilt_macos_x64//:libcef_sandbox_mac",
+            "@sdl2-cef//:sdl-cef_mac",
+            "@cef-project//:examples_shared_mac",
+        ],
+    }),
+)

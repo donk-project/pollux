@@ -1,0 +1,33 @@
+# Donk Project
+# Copyright (c) 2021 Warriorstar Orion <orion@snowfrost.garden>
+# SPDX-License-Identifier: MIT
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+load("@donk//:defs.bzl", "DARWIN_DEFAULT_COPTS", "WINDOWS_DEFAULT_COPTS")
+
+cc_binary(
+    name = "main",
+    srcs = ["main.cc"],
+    copts = select({
+        "//:windows": WINDOWS_DEFAULT_COPTS,
+        "//:darwin": DARWIN_DEFAULT_COPTS,
+    }),
+    data = [
+        "//pollux/assets:complete",
+        "@snowfrost//snowfrost/FalacyTut:data",
+    ],
+    linkopts = select({
+        "//:windows": ["/SUBSYSTEM:CONSOLE"],
+        "//:darwin": [],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pollux/backends/gwork_sdl2",
+        "//pollux/common:event",
+        "//pollux/core/manager",
+        "//pollux/core/manager:default",
+        "//pollux/resources/manager",
+        "//pollux/resources/manager:default",
+        "//pollux/server/states:server_room",
+        "@enet-plus",
+    ],
+)
