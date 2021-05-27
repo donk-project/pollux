@@ -66,7 +66,7 @@ apple_bundle_version(
 
 
 macos_application(
-    name = "PolluxClient",
+    name = "PolluxClientMac",
     additional_contents = dict({
         ":PolluxClientMacOSHelper_" + name: "Frameworks"
         for name, _, _ in HELPER_NAMES
